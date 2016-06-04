@@ -1,0 +1,105 @@
+/* Base for label styling */
+[type="checkbox"]:not(:checked),
+[type="checkbox"]:checked {
+  position: absolute;
+  left: -9999px;
+}
+[type="checkbox"]:not(:checked) + span,
+[type="checkbox"]:checked + span {
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+}
+
+/* checkbox aspect */
+[type="checkbox"]:not(:checked) + span:before,
+[type="checkbox"]:checked + span:before {
+  content:'';
+  position: absolute;
+  left:0; bottom: 0.18em;
+  width: 17px; height: 17px;
+  border: 1px solid #f8f8f8;
+  background: #f8f8f8;
+  border-radius: 3px;
+
+}
+/* checked mark aspect */
+[type="checkbox"]:not(:checked) + span:after,
+[type="checkbox"]:checked + span:after {
+
+  position: absolute;
+  bottom: 0.38em; left: 0.3em;
+  font-size: 18px;
+  line-height: 0.8;
+  color: #9072FF;
+}
+/* checked mark aspect changes */
+[type="checkbox"]:not(:checked) + span:after {
+  content: '+';
+}
+[type="checkbox"]:checked + span:after {
+  content: '−';
+}
+
+[type="checkbox"]:checked:focus + span:before,
+[type="checkbox"]:not(:checked):focus + span:before {
+  border: 1px dotted blue;
+}
+
+[type="checkbox"] + span:hover:before {
+  border: 1px solid #4778d9!important;
+}
+
+body {
+    font-size: 18px;
+}
+
+.search {
+    background-color: #eee;
+    padding: 1em;
+}
+
+.search input {
+    width: 100%;
+    font-size: 1.2em;
+    padding: 0.1em 0.3em;
+}
+
+.category {
+    margin-top:2px;
+}
+.category label {
+    font-family: Arial;
+    display:block;
+    font-size: 1.5em;
+    color: #333;
+    margin: 0;
+    padding: 0.33em;
+    padding-left: 0.5em;
+    background-color: #C7ABE1;
+}
+
+.category .name {
+    margin-left: 0.25em;
+}
+
+.entry {
+    background-color:#f5f5f5;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin-top:2px;
+}
+
+.entry pre {
+    display: block;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-left: 0.5em;
+    margin-top:1px;
+    margin-bottom: 0;
+    background-color:#e3e3e3;
+
+
+}

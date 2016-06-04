@@ -1,0 +1,33 @@
+{
+  "name": "node-sql-examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "develop": "parallel watch-compile server watch-bundle",
+    "watch-compile": "tsc -w",
+    "watch-bundle": "watchify -d build/Page.js -o build/bundle.js",
+    "server": "http-server",
+    "build": "npm run build-tsc && npm run build-bundle",
+    "build-tsc": "tsc",
+    "build-bundle": "browserify build/index.js | uglifyjs > build/main-production.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "acorn": "^3.1.0",
+    "immutable": "^3.8.1",
+    "lodash": "^4.13.1",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "rx": "^4.1.0",
+    "rx-dom-ajax": "^7.0.3",
+    "sql": "^0.70.0"
+  },
+  "devDependencies": {
+    "http-server": "^0.9.0",
+    "npm-parallel": "^2.0.1",
+    "typescript": "^1.8.10"
+  }
+}
