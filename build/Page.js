@@ -12,7 +12,7 @@ function assignDict(d, key, t) {
     var _a;
 }
 var Search = function (p) {
-    return React.createElement("div", {className: "search"}, React.createElement("input", {type: "text", onChange: p.onChange}));
+    return React.createElement("div", {className: "search"}, React.createElement("input", {autoFocus: true, type: "text", onChange: p.onChange}));
 };
 var match = function (text, entry) {
     return entry && entry.toLowerCase().indexOf(text) >= 0;

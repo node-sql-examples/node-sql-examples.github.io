@@ -39,7 +39,7 @@ function assignDict<T>(d:{[key:string]:T}, key:string, t:T):{[key:string]:T} {
 
 let Search = (p:{onChange: any}) =>
     <div className="search">
-        <input type="text" onChange={p.onChange} />
+        <input autoFocus type="text" onChange={p.onChange} />
     </div>
 
 let match = (text:string, entry: string) => {
