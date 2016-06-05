@@ -12,21 +12,19 @@ function assignDict(d, key, t) {
     var _a;
 }
 var Search = function (p) {
-    return React.createElement("div", {className: "search"}, React.createElement("input", {autoFocus: true, type: "text", onChange: p.onChange}));
+    return React.createElement("div", {className: "search"}, React.createElement("input", {autoFocus: true, placeholder: "Search...", type: "text", onChange: p.onChange}), React.createElement("select", {value: p.dialect, onChange: p.setDialect}, React.createElement("option", {value: "pg"}, "PostgreSQL"), React.createElement("option", {value: "mysql"}, "MySQL"), React.createElement("option", {value: "sqlite"}, "SQLite"), React.createElement("option", {value: "mssql"}, "MS SQL"), React.createElement("option", {value: "oracle"}, "Oracle")));
 };
 var match = function (text, entry) {
     return entry && entry.toLowerCase().indexOf(text) >= 0;
 };
 var App = function (p) {
-    return React.createElement("div", {className: "app"}, React.createElement(Search, {onChange: p.events.change}), React.createElement(Categories, {items: p.state.categories, filter: p.state.filter, onToggle: p.events.toggle}));
+    return React.createElement("div", {className: "app"}, React.createElement(Search, {onChange: p.events.change, dialect: p.state.filter.dialect, setDialect: p.events.setDialect}), React.createElement(Categories, {items: p.state.categories, filter: p.state.filter, onToggle: p.events.toggle}));
 };
 var Categories = function (p) {
     return React.createElement("div", {className: "categories"}, Object.keys(p.items).map(function (name) { return React.createElement(Category, {data: p.items[name], onToggle: p.onToggle, filter: p.filter}); }));
 };
 var Category = function (p) {
-    var shownItems = p.filter.text.length > 0
-        ? p.data.entries.filter(function (entry) { return match(p.filter.text, entry[p.filter.dialect]); })
-        : p.data.entries;
+    var shownItems = p.data.entries.filter(function (entry) { return match(p.filter.text, entry[p.filter.dialect]); });
     var showCategoryName = shownItems.length > 0;
     var showCategory = p.data.shown || (p.filter.text.length > 0 && shownItems.length > 0);
     if (!showCategoryName)
@@ -52,6 +50,9 @@ var events = {
                 shown: !s.categories[name].shown
             }))
         }); });
+    },
+    setDialect: function (e) {
+        return emitter.onNext(function (s) { return assign(s, { filter: assign(s.filter, { dialect: e.target.value }) }); });
     }
 };
 function mkCategories(data) {

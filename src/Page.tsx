@@ -37,9 +37,16 @@ function assignDict<T>(d:{[key:string]:T}, key:string, t:T):{[key:string]:T} {
     return (Object as any).assign({}, d, {[key]: t});
 }
 
-let Search = (p:{onChange: any}) =>
+let Search = (p:{dialect: string, onChange: Function, setDialect: Function}) =>
     <div className="search">
-        <input autoFocus type="text" onChange={p.onChange} />
+        <input autoFocus placeholder="Search..."  type="text" onChange={p.onChange} />
+        <select value={p.dialect} onChange={p.setDialect}>
+            <option value="pg">PostgreSQL</option>
+            <option value="mysql">MySQL</option>
+            <option value="sqlite">SQLite</option>
+            <option value="mssql">MS SQL</option>
+            <option value="oracle">Oracle</option>
+        </select>
     </div>
 
 let match = (text:string, entry: string) => {
@@ -48,7 +55,7 @@ let match = (text:string, entry: string) => {
 
 let App = (p:{events: {change: Function, toggle: Function}; state: State}) =>
     <div className="app">
-        <Search onChange={p.events.change} />
+        <Search onChange={p.events.change} dialect={p.state.filter.dialect} setDialect={p.events.setDialect} />
         <Categories items={p.state.categories} filter={p.state.filter} onToggle={p.events.toggle}  />
     </div>
 
@@ -60,9 +67,7 @@ let Categories = (p:{items:{[key:string]:Category}, onToggle: Function, filter:F
 
 let Category = (p:{data: Category, onToggle: Function, filter:Filter}) => {
 
-    let shownItems = p.filter.text.length > 0
-        ? p.data.entries.filter(entry => match(p.filter.text, entry[p.filter.dialect]))
-        : p.data.entries;
+    let shownItems = p.data.entries.filter(entry => match(p.filter.text, entry[p.filter.dialect]))
 
     let showCategoryName = shownItems.length > 0;
     let showCategory = p.data.shown || (p.filter.text.length > 0 && shownItems.length > 0)
@@ -105,7 +110,9 @@ let events = {
             categories: assignDict(s.categories, name, assign(s.categories[name], {
                 shown: !s.categories[name].shown
             }))
-        }))
+        })),
+    setDialect: (e: any) =>
+        emitter.onNext(s => assign(s, {filter: assign(s.filter, {dialect: e.target.value})}))
 }
 
 function mkCategories(data: any) {
