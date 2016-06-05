@@ -16,7 +16,7 @@
 [type="checkbox"]:checked + span:before {
   content:'';
   position: absolute;
-  left:0; bottom: 0.18em;
+  left:0; bottom: 0.13em;
   width: 1rem; height: 1rem;
   border: 1px solid #f8f8f8;
   background: #f8f8f8;
@@ -28,7 +28,7 @@
 [type="checkbox"]:checked + span:after {
 
   position: absolute;
-  bottom: 0.21em; left: 0.14em;
+  bottom: 0.18em; left: 0.17em;
   font-size: 1em;
   line-height: 0.8;
   color: #968EB2;
@@ -105,7 +105,7 @@ body {
 }
 
 .entry {
-    background-color:#f5f5f5;
+    background-color:#fff;
     padding: 0.33em 0.66em;
     margin-top:2px;
 }
@@ -119,7 +119,7 @@ body {
     padding-left: 0.5em;
     margin-top:1px;
     margin-bottom: 0;
-    background-color:#e3e3e3;
+    background-color:#eee;
 
 
 }
