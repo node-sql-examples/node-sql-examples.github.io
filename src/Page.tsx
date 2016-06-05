@@ -1,10 +1,10 @@
 import * as React from 'react'
 import * as Rx from 'rx'
 import {Rx as DOM} from 'rx-dom-ajax'
+import funcSubject from './func-subject'
+import * as ReactDOM from 'react-dom'
 
 Rx.DOM = DOM.DOM;
-
-import * as ReactDOM from 'react-dom'
 
 interface Entry {
     category: string
@@ -53,7 +53,7 @@ let match = (text:string, entry: string) => {
     return entry && entry.toLowerCase().indexOf(text) >= 0;
 }
 
-let App = (p:{events: {change: Function, toggle: Function}; state: State}) =>
+let App = (p:{events: {change: Function, toggle: Function, setDialect: Function}; state: State}) =>
     <div className="app">
         <Search onChange={p.events.change} dialect={p.state.filter.dialect} setDialect={p.events.setDialect} />
         <Categories items={p.state.categories} filter={p.state.filter} onToggle={p.events.toggle}  />
@@ -77,7 +77,7 @@ let Category = (p:{data: Category, onToggle: Function, filter:Filter}) => {
     return <div className="category">
         <label for={p.data.name} class="name">
             <input type="checkbox" id={p.data.name} checked={p.data.shown}
-                onChange={(e:any) => console.log("Toggle") || p.onToggle(e, p.data.name)} />
+                onChange={(e:any) => console.log("Toggle") || p.onToggle({e:e, name:p.data.name})} />
             <span />
             <span className="name">{p.data.name}</span>
         </label>
@@ -96,24 +96,44 @@ let Entry = (p:{sql: string; js:string}) =>
     </div>;
 
 
-let emitter:Rx.Observer<(s:State) => State> = null;
-let stateMutators = Rx.Observable.create<(s:State) => State>(observer => {
-    emitter = observer
-})
-
 let events = {
-    change: (e:any) =>
-        emitter.onNext(s => assign(s, {filter: assign(s.filter, {text: e.target.value})})),
+    change: funcSubject<any>(),
+    setDialect: funcSubject<any>(),
+    toggle: funcSubject<{e: any, name:string}>()
+}
 
-    toggle: (e:any, name:string) =>
-        emitter.onNext(s => assign(s, {
+let toggles = events.toggle.events.map(({e:any, name:string}) =>
+        (s:State) => assign(s, {
             categories: assignDict(s.categories, name, assign(s.categories[name], {
                 shown: !s.categories[name].shown
             }))
-        })),
-    setDialect: (e: any) =>
-        emitter.onNext(s => assign(s, {filter: assign(s.filter, {dialect: e.target.value})}))
-}
+        }))
+
+let urlHash = window.location.hash.split('&').reduce((acc, el) => {
+    let [key, val] = el.split('=').map(decodeURIComponent)
+    acc[key] = val;
+    return acc;
+}, {} as {[key:string]:string})
+
+let dialects = Rx.Observable.return(urlHash['dialect'] || 'pg')
+    .merge(events.setDialect.events.map(e => e.target.value))
+
+let dialectMutator = dialects.map(dialect =>
+        (s:State) => assign(s, {filter: assign(s.filter, {dialect})}))
+
+
+let filters = Rx.Observable.return(urlHash['query'] || '')
+    .merge(events.change.events.map(e => e.target.value).debounce(500))
+
+let filterMutators = filters.map(text => (s:State) => assign(s, {filter: assign(s.filter, {text})}))
+
+let stateMutators = toggles.merge(dialectMutator).merge(filterMutators)
+
+let hashChanges = Rx.Observable.combineLatest(dialects, filters, (d, f) =>
+    d == 'pg' && f == '' ? '' : '#' +
+    'dialect=' + encodeURIComponent(d) + '&query=' + encodeURIComponent(f))
+
+hashChanges.subscribe(hash => { if (hash || window.location.hash) window.location.hash = hash })
 
 function mkCategories(data: any) {
     var cats:{[key:string]:Category} = {};
@@ -128,7 +148,7 @@ let dataArrival = Rx.DOM.getJSON('/data.json')
     .map(cats => (s:State) => assign(s, {categories: cats}));
 
 
-let state = dataArrival.merge(stateMutators).scan((acc, val) => val(acc), {
+let state = dataArrival.merge(stateMutators).scan((acc, mutator) => mutator(acc), {
     categories: {} as {[key:string]:Category},
     filter: {
         text: '',
