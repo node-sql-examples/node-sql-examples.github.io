@@ -18,7 +18,7 @@ console.log(JSON.stringify(L.groupBy(examples, e => e.category)))
 
 function getExamples(file) {
     var source = file.data;
-    var category = file.name.replace('-tests.js', '')
+    var category = file.name.replace(/-tests?.js$/, '')
     var ast = acorn.parse(source);
     var examples = [];
 
