@@ -30,7 +30,7 @@ var Category = function (p) {
     var showCategory = p.data.shown || (p.filter.text.length > 0 && shownItems.length > 0);
     if (!showCategoryName)
         return null;
-    return React.createElement("div", {className: "category"}, React.createElement("label", {for: p.data.name, class: "name"}, React.createElement("input", {type: "checkbox", id: p.data.name, checked: p.data.shown, onChange: function (e) { return console.log("Toggle") || p.onToggle({ e: e, name: p.data.name }); }}), React.createElement("span", null), React.createElement("span", {className: "name"}, p.data.name)), showCategory ?
+    return React.createElement("div", {className: "category"}, React.createElement("label", {for: p.data.name, class: "name"}, React.createElement("input", {type: "checkbox", id: p.data.name, checked: p.data.shown, onChange: function (e) { return p.onToggle(p.data.name); }}), React.createElement("span", null), React.createElement("span", {className: "name"}, p.data.name)), showCategory ?
         React.createElement("div", {className: "entries"}, shownItems.map(function (item) { return React.createElement(Entry, {sql: item[p.filter.dialect], js: item.query}); }))
         : null);
 };
@@ -42,8 +42,7 @@ var events = {
     setDialect: func_subject_1.default(),
     toggle: func_subject_1.default()
 };
-var toggles = events.toggle.events.map(function (_a) {
-    var any = _a.e, string = _a.name;
+var toggles = events.toggle.events.map(function (name) {
     return function (s) { return assign(s, {
         categories: assignDict(s.categories, name, assign(s.categories[name], {
             shown: !s.categories[name].shown

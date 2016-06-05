@@ -77,7 +77,7 @@ let Category = (p:{data: Category, onToggle: Function, filter:Filter}) => {
     return <div className="category">
         <label for={p.data.name} class="name">
             <input type="checkbox" id={p.data.name} checked={p.data.shown}
-                onChange={(e:any) => console.log("Toggle") || p.onToggle({e:e, name:p.data.name})} />
+                onChange={e => p.onToggle(p.data.name)} />
             <span />
             <span className="name">{p.data.name}</span>
         </label>
@@ -99,10 +99,10 @@ let Entry = (p:{sql: string; js:string}) =>
 let events = {
     change: funcSubject<any>(),
     setDialect: funcSubject<any>(),
-    toggle: funcSubject<{e: any, name:string}>()
+    toggle: funcSubject<string>()
 }
 
-let toggles = events.toggle.events.map(({e:any, name:string}) =>
+let toggles = events.toggle.events.map((name:string) =>
         (s:State) => assign(s, {
             categories: assignDict(s.categories, name, assign(s.categories[name], {
                 shown: !s.categories[name].shown
