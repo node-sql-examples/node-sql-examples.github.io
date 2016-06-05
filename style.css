@@ -110,9 +110,9 @@ body {
     margin-top:2px;
 }
 
-.entry pre {
-    font-size: 0.9em;
-    font-family: Consolas, Monaco;
+.entry pre, .entry code {
+    font-size: 0.95em;
+    font-family: Consolas, Monaco !important;
     display: block;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
