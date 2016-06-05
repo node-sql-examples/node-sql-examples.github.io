@@ -49,11 +49,12 @@ var toggles = events.toggle.events.map(function (name) {
         }))
     }); };
 });
-var urlHash = window.location.hash.split('&').reduce(function (acc, el) {
+var urlHash = window.location.hash.replace(/^#/, '').split('&').reduce(function (acc, el) {
     var _a = el.split('=').map(decodeURIComponent), key = _a[0], val = _a[1];
     acc[key] = val;
     return acc;
 }, {});
+console.log(urlHash);
 var dialects = Rx.Observable.return(urlHash['dialect'] || 'pg')
     .merge(events.setDialect.events.map(function (e) { return e.target.value; }));
 var dialectMutator = dialects.map(function (dialect) {

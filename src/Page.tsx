@@ -109,11 +109,13 @@ let toggles = events.toggle.events.map((name:string) =>
             }))
         }))
 
-let urlHash = window.location.hash.split('&').reduce((acc, el) => {
+let urlHash = window.location.hash.replace(/^#/, '').split('&').reduce((acc, el) => {
     let [key, val] = el.split('=').map(decodeURIComponent)
     acc[key] = val;
     return acc;
 }, {} as {[key:string]:string})
+
+console.log(urlHash)
 
 let dialects = Rx.Observable.return(urlHash['dialect'] || 'pg')
     .merge(events.setDialect.events.map(e => e.target.value))
