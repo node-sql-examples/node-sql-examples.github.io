@@ -1,10 +1,14 @@
 import * as React from 'react'
 import * as Rx from 'rx'
-import {Rx as DOM} from 'rx-dom-ajax'
+import * as Rxx from 'rx-dom-ajax'
 import funcSubject from './func-subject'
 import * as ReactDOM from 'react-dom'
 
-Rx.DOM = DOM.DOM;
+declare var require:any;
+
+var Highlight = require('react-highlight')
+
+Rx.DOM = (Rxx as any).Rx.DOM;
 
 interface Entry {
     category: string
@@ -91,8 +95,8 @@ let Category = (p:{data: Category, onToggle: Function, filter:Filter}) => {
 
 let Entry = (p:{sql: string; js:string}) =>
     <div className="entry">
-        <pre className="sql">{p.sql}</pre>
-        <pre className="js">{p.js}</pre>
+        <Highlight className="sql">{p.sql}</Highlight>
+        <Highlight className="js">{p.js}</Highlight>
     </div>;
 
 
@@ -114,8 +118,6 @@ let urlHash = window.location.hash.replace(/^#/, '').split('&').reduce((acc, el)
     acc[key] = val;
     return acc;
 }, {} as {[key:string]:string})
-
-console.log(urlHash)
 
 let dialects = Rx.Observable.return(urlHash['dialect'] || 'pg')
     .merge(events.setDialect.events.map(e => e.target.value))

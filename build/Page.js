@@ -1,10 +1,11 @@
 "use strict";
 var React = require('react');
 var Rx = require('rx');
-var rx_dom_ajax_1 = require('rx-dom-ajax');
+var Rxx = require('rx-dom-ajax');
 var func_subject_1 = require('./func-subject');
 var ReactDOM = require('react-dom');
-Rx.DOM = rx_dom_ajax_1.Rx.DOM;
+var Highlight = require('react-highlight');
+Rx.DOM = Rxx.Rx.DOM;
 function assign(obj, assignments) {
     return Object.assign({}, obj, assignments);
 }
@@ -35,7 +36,7 @@ var Category = function (p) {
         : null);
 };
 var Entry = function (p) {
-    return React.createElement("div", {className: "entry"}, React.createElement("pre", {className: "sql"}, p.sql), React.createElement("pre", {className: "js"}, p.js));
+    return React.createElement("div", {className: "entry"}, React.createElement(Highlight, {className: "sql"}, p.sql), React.createElement(Highlight, {className: "js"}, p.js));
 };
 var events = {
     change: func_subject_1.default(),
@@ -54,7 +55,6 @@ var urlHash = window.location.hash.replace(/^#/, '').split('&').reduce(function 
     acc[key] = val;
     return acc;
 }, {});
-console.log(urlHash);
 var dialects = Rx.Observable.return(urlHash['dialect'] || 'pg')
     .merge(events.setDialect.events.map(function (e) { return e.target.value; }));
 var dialectMutator = dialects.map(function (dialect) {
