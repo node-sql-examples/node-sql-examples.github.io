@@ -1,5 +1,5 @@
 "use strict";
-var Rx = require('rx');
+var Rx = require('./rx-with-dom');
 function subject() {
     var obs = new Rx.Subject();
     var emit = function emit(t) {

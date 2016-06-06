@@ -7,11 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "develop": "parallel watch-compile server watch-bundle",
     "watch-compile": "tsc -w",
-    "watch-bundle": "watchify -d build/Page.js -o build/bundle.js",
+    "watch-bundle": "watchify -d build/index.js -o build/bundle.js",
     "server": "http-server",
     "build": "npm run build-tsc && npm run build-bundle",
     "build-tsc": "tsc",
-    "build-bundle": "browserify build/index.js | uglifyjs > build/main-production.js"
+    "build-bundle": "browserify build/index.js | uglifyjs > build/bundle-production.js"
   },
   "author": "",
   "license": "ISC",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "http-server": "^0.9.0",
     "npm-parallel": "^2.0.1",
-    "typescript": "^1.8.10"
+    "typescript": "^1.8.10",
+    "uglifyjs": "^2.4.10"
   }
 }
